@@ -1,5 +1,4 @@
 import numpy
-# import copy
 import time
 
 mod = 97
@@ -29,7 +28,6 @@ for ri, r in enumerate(broken_private_key):
             broken_vals.append(BrokenVal(ri, ci))
 
 broken_vals_2 = []
-
 print '\nFound breaks in PK 2:'
 for ri, r in enumerate(broken_private_key_2):
     for ci, c in enumerate(r):
@@ -42,8 +40,9 @@ print '\nFound Validators in decoded:'
 for ri, r in enumerate(decoded):
     for ci, c in enumerate(r):
         if c >= 0:
-            print str(len(decoded)) + ":[" + str(ri) + "][" + str(ci) + "], "
             validation_vals.append(BrokenVal(ri, ci, c))
+            lastI = len(validation_vals) - 1
+            print str(lastI) + ":[" + str(ri) + "][" + str(ci) + "] = " + str(validation_vals[lastI].val) + ", "
 
 
 def iteration_add_2(digit):
@@ -70,8 +69,10 @@ def iteration_add(digit):
 
 def validate(matrix):
     flag = True
-    for val in validation_vals:
+    for i, val in enumerate(validation_vals):
         if matrix[val.r][val.c] != val.val:
+            # if i > 2:
+                # print(matrix)
             flag = False
             break
     return flag
@@ -91,6 +92,12 @@ while not depleted:
             numpy.dot(encoded, broken_private_key),
             broken_private_key_2),
         mod)
+    # if attempt[0][0] == 26 \
+    #         and attempt[1][4] == 14 \
+    #         and attempt[2][1] == 17 \
+    #         and attempt[4][0] == 92 \
+    #         and attempt[4][4] == 28:
+    #     print(attempt)
     if validate(attempt):
         successCnt += 1
         fname = "solution" + str(successCnt) + '.csv'
